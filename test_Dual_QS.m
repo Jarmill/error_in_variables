@@ -1,5 +1,6 @@
 % Implementation of
 % "Data-Driven Stabilizing and Robust Control of Discrete-Time Linear Systems with Error in Variables"
+
 clear
 yalmip('clear')
 rng(1, 'twister')
