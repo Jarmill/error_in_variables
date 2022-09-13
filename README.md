@@ -5,11 +5,13 @@ B. "Data-driven stabilization and robust control of linear systems corrupted by 
 
 
 ## Experiments 
-Algorithm 1 in A
-test_Full_SS.m      			full method for superstability, only works for 1st order system due to high complexity
+Algorithm 1 in A, test_Full_SS.m      			
 
-Algorithm 2 in A
-test_Dual_SS.m   		        dual method for superstability, greatly reduce the complexity, works for 2nd order system
+full method for superstability, only works for 1st order system due to high complexity
+
+Algorithm 2 in A, test_Dual_SS.m 
+
+dual method for superstability, greatly reduce the complexity, works for 2nd order system
 
 section 7 in B
 test_Dual_SS_all_noise.m                dual method considering all type of noises (dx, du, w), this covers test_Dual_SS.m
