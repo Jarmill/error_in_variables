@@ -3,6 +3,8 @@ A. "Data-Driven Superstabilizing Control of Error-in-Variables Discrete-Time Lin
 
 B. "Data-driven stabilization and robust control of linear systems corrupted by error in variables“
 
+Install YALMIP and MOSEK before running the code
+
 
 ## Experiments 
 Algorithm 1 in A, test_Full_SS.m      			
