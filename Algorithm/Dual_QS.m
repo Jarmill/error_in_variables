@@ -2,6 +2,7 @@ function out = Dual_QS(sim, d, T, sysd, type, obj)
 %  sim:     sampled trajectories
 %    d:     degree of the psatz
 %    T:     # of samples for design
+% sysd:     system description (performance)
 % type:     'no_prior', system unknown
 %           'prior',    system partically known
 %  obj:     '[]',       stabilization

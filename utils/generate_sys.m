@@ -12,6 +12,7 @@ sysd.E = eye(n,e);
 sysd.C = eye(r,n);
 sysd.D1 = [zeros(n,m); eye(m)];
 sysd.D2 = eye(r,e);
+sysd.F = 0;
 sysd.r = r;
 sysd.e = e;
 end

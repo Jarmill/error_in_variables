@@ -1,12 +1,13 @@
-function out = Dual_Pos(sim, d, T, type, obj)
+function out = Dual_Pos(sim, d, T, sysd, type, obj)
 %DUAL_POS positive systems stabilization
 %  sim:     sampled trajectories
 %    d:     degree of the psatz
 %    T:     # of samples for design
+% sysd:     system description (performance)
 % type:     'no_prior', system unknown
 %           'prior',    system partically known
 %  obj:     '[]',       stabilization
-%           'lambda',   minimize lambda
+%           'p2p',      minimize peak-to-peak gain
 
 % extract data and size
 X = sim.X_noise(:,1:T);     % state data
@@ -38,18 +39,27 @@ Y = sdpvar(m,n,'full');
 V = diag(v);
 Acl = A*V+B*Y;
 
+Cons = [v >= tol];
 switch obj
     %ignore objective for now. add it later
     case '[]'
         lambda = 1;
-        Cons = [];
-    case 'lambda'
+        Cons = [Cons; sum(v)==1];
+        E = 0;        
+    case 'p2p'
         lambda = sdpvar(1);
-        Cons = (lambda <= 1-tol);
+        Ccl = sysd.C*V + sysd.D1*Y;
+        E = sysd.E;
+        Cons = [Cons; Ccl(:) >= 0; ...
+            lambda - sum(Ccl, 2) - sum(sysd.F, 2) >= tol];
+        
+%     case 'lambda'
+%         lambda = sdpvar(1);
+%         Cons = (lambda <= 1-tol);
     otherwise
         disp('You need to define objective')
 end
-Cons = [Cons; sum(v)==1; v>=tol];
+
 
 % constraints
 g = eps*ones(2*n*T,1);            % eq.(16) inequality constraint
@@ -62,7 +72,7 @@ cons_data = struct('ineq', g, 'eq', h);
 
 % define non-negative polynomials
 p1 = Acl;
-p2 = v -sum(Acl,2)  -tol;
+p2 = v -sum(Acl,2) - sum(E, 2)  -tol;
 P = [p1(:);p2(:)];    % P contains M-A-BK >= 0, M+A+BK >= 0, 1-delta-sum(M,2) >= 0
 
 % get psatz constraints

@@ -34,7 +34,7 @@ sim = struct('U',U,'X_noise',X_noise,'epsilon',eps,'tolerance',tol);
 %% solve SS
 type = 'no_prior';
 obj = '[]';
-out = Full_Pos(sim, d, T, type, obj);
+out = Full_Pos(sim, d, T, sysd, type, obj);
 sol = optimize(out.cons, out.obj, opts)
 
 %% extract solution
