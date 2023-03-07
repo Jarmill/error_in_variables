@@ -7,7 +7,7 @@ umax = 1;                   % input bound
 % eps = 0.1;                 % noise bound    dx
 % T = 6;                      % # of samples
 eps = 0.08;                 % noise bound    dx
-T = 10;                      % # of samples
+T = 8;                      % # of samples
 
 epslist = [0.05; 0.08; 0.11; 0.14];
 Tlist = [8; 10; 12; 14];
@@ -66,6 +66,6 @@ for i = 1:Ntraj
         X(:,t+1) = A*X(:,t) + B*U(:,t);
     end
     X_noise = X + noise_x;
-    sim_out{i} = struct('U',U,'X_noise',X_noise,'epsilon',eps,'tolerance',tol);
+    sim_out{i} = struct('U',U,'X_noise',X_noise,'epsilon',eps,'tolerance',tol, 'T', T);
 end
 end
