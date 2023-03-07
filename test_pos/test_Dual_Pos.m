@@ -9,10 +9,13 @@ tic
 umax = 1;                   % input bound
 % eps = 0.1;                 % noise bound    dx
 % T = 6;                      % # of samples
-eps = 0.1;                 % noise bound    dx
-T = 12;                      % # of samples
+% eps = 0.1;                 % noise bound    dx
+eps = 0.08;
+% T = 12;                      % # of samples
+% T = 10;
+T = 8;
 d = 1;                      % degree of psatz
-tol = 1e-6;                 % delta in paper
+tol = 1e-5;                 % delta in paper
 opts = sdpsettings('solver','mosek','verbose', 1);
 
 %% generate system
