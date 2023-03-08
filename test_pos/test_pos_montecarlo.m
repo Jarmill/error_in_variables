@@ -1,4 +1,4 @@
-load('pos_traj.mat')
+load('pos_traj_std.mat')
 
 % success_time = zeros(length
 
@@ -24,9 +24,9 @@ for i = 1:length(sim_eps)
         if sol.problem==0
             success_eps(i) = success_eps(i) + 1;
         end
-        fprintf('\t\t eps %d out of %d\n', k, length(sim_eps{i}))
+        fprintf('\t\t eps %d out of %d: %d\n', k, length(sim_eps{i}), sol.problem)
     end    
-    save('pos_experiment_stab.mat', 'success_eps');
+    save('pos_experiment_stab_std.mat', 'success_eps');
     fprintf('eps %d out of %d\n', i, length(sim_eps))
 end
 
@@ -42,8 +42,8 @@ for i = 1:length(sim_time)
         if sol.problem==0
             success_T(i) = success_T(i) + 1;
         end
-        fprintf('\t\t eps %d out of %d\n', k, length(sim_time{i}))
+        fprintf('\t\t eps %d out of %d: %d\n', k, length(sim_time{i}), sol.problem)
     end
-    save('pos_experiment_stab.mat', 'success_eps', 'success_T');    
+    save('pos_experiment_stab_std.mat', 'success_eps', 'success_T');    
     fprintf('eps %d out of %d\n', i, length(sim_time))
 end

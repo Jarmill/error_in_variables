@@ -9,11 +9,11 @@ tic
 umax = 1;                   % input bound
 % eps = 0.1;                 % noise bound    dx
 % T = 6;                      % # of samples
-% eps = 0.1;                 % noise bound    dx
-eps = 0.08;
-% T = 12;                      % # of samples
+eps = 0.1;                 % noise bound    dx
+% eps = 0.08;
+T = 12;                      % # of samples
 % T = 10;
-T = 8;
+% % T = 8;
 d = 1;                      % degree of psatz
 tol = 1e-5;                 % delta in paper
 opts = sdpsettings('solver','mosek','verbose', 1);
@@ -51,8 +51,8 @@ sim = struct('U',U,'X_noise',X_noise,'epsilon',eps,'tolerance',tol);
 
 %% solve SS
 type = 'no_prior';
-obj = '[]';
-% obj = 'p2p';
+% obj = '[]';
+obj = 'p2p';
 
 out = Dual_Pos(sim, d, T, sysd, type, obj);
 % out = Dual_SS_manual(sim, d, T, obj);   % does not support prior

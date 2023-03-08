@@ -6,7 +6,7 @@ tic
 umax = 1;                   % input bound
 % eps = 0.1;                 % noise bound    dx
 % T = 6;                      % # of samples
-eps = 0.08;                 % noise bound    dx
+eps = 0.14;                 % noise bound    dx
 T = 8;                      % # of samples
 
 epslist = [0.05; 0.08; 0.11; 0.14];
@@ -49,7 +49,7 @@ for i = 1:length(epslist)
     sim_eps{i} = pos_sim_eiv(Ntraj, A, B, umax, epslist(i), T, tol);
 end
 
-save('pos_traj.mat', 'sim', 'sysd', 'sim_time', 'sim_eps');
+save('pos_traj_std.mat', 'sim', 'sysd', 'sim_time', 'sim_eps');
 
 function sim_out = pos_sim_eiv(Ntraj, A, B, umax, eps, T, tol)
 %generate samples of the trajectory starting from A, B
