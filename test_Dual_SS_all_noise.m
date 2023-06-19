@@ -7,7 +7,8 @@ rng(1, 'twister')
 tic
 %% parameter
 umax = 1;                   % input bound
-eps = [0.01; 0.02; 0.01];   % noise bound    dx,du,w
+% eps = [0.01; 0.02; 0.01];   % noise bound    dx,du,w
+eps = [0.1; 0.2; 0.1];   % noise bound    dx,du,w
 T = 5;                      % # of samples
 d = 1;                      % degree of psatz
 tol = 1e-6;                 % delta in paper
