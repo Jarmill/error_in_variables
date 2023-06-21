@@ -54,31 +54,4 @@ eps2 = [0; 0; value(bnd_wrap.eps_wrap)];
 sim2 = struct('X_noise',X_noise,'U_noise',U_noise,'epsilon',eps2,'tolerance',tol);
 
 %eps_wrap = 0.1445;
-
-%% solve SS
-type = 'no_prior';
-obj = 'lambda';
-out = Dual_SS_all_noise(sim, d, T, type, obj);
-sol = optimize(out.cons, out.obj, opts)
-
-%% extract solution
-K = value(out.K);
-lambda = value(out.obj)
-
-%% process noise
-out1 = Dual_SS_all_noise(sim1, d, T, type, obj);
-sol1 = optimize(out1.cons, out1.obj, opts)
-
-%% process noise
-out2 = Dual_SS_all_noise(sim2, d, T, type, obj);
-sol2 = optimize(out2.cons, out2.obj, opts)
-
-
-%% extract solution
-lambda0 = value(out.obj)
-lambda1 = value(out1.obj)
-lambda2 = value(out2.obj)
-
-t = toc
-
-
+0
