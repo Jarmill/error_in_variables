@@ -7,7 +7,19 @@ rng(1, 'twister')
 tic
 %% parameter
 umax = 1;                   % input bound
-eps = [0.03; 0.02; 0.05];   % noise bound    dx,du,w
+eps = [0.09; 0.05; 0.02];   % noise bound    dx,du,w %new test
+%lambda_EIV = 0.8324
+%lambda_process = 0.5879
+%epsilon_process = 0.1436
+%epsilon_eiv = 1.6875
+
+
+
+% eps = [0.03; 0.02; 0.05];   % noise bound    dx,du,w %original test
+
+
+
+
 T = 8;                      % # of samples
 d = 1;                      % degree of psatz
 tol = 1e-6;                 % delta in paper
@@ -46,12 +58,6 @@ bnd = process_bound(sim, opts);
 eps1 = [0; 0; bnd];
 sim1 = struct('X_noise',X_noise,'U_noise',U_noise,'epsilon',eps1,'tolerance',tol);
 
-%find a process noise polytope that contains the EIV set
-bnd_wrap = process_bound_EIV(sim, d, T, 'no_prior');
-sol_wrap = optimize(bnd_wrap.cons, bnd_wrap.obj, opts)
-eps_wrap = value(bnd_wrap.eps_wrap);
-eps2 = [0; 0; value(bnd_wrap.eps_wrap)];
-sim2 = struct('X_noise',X_noise,'U_noise',U_noise,'epsilon',eps2,'tolerance',tol);
 
 %eps_wrap = 0.1445;
 
@@ -69,7 +75,15 @@ lambda = value(out.obj)
 out1 = Dual_SS_all_noise(sim1, d, T, type, obj);
 sol1 = optimize(out1.cons, out1.obj, opts)
 
-%% process noise
+%% process noise wrapping
+% find a process noise polytope that contains the EIV set
+bnd_wrap = process_bound_EIV(sim, d, T, 'no_prior');
+sol_wrap = optimize(bnd_wrap.cons, bnd_wrap.obj, opts)
+eps_wrap = value(bnd_wrap.eps_wrap);
+eps2 = [0; 0; value(bnd_wrap.eps_wrap)];
+sim2 = struct('X_noise',X_noise,'U_noise',U_noise,'epsilon',eps2,'tolerance',tol);
+
+
 out2 = Dual_SS_all_noise(sim2, d, T, type, obj);
 sol2 = optimize(out2.cons, out2.obj, opts)
 
