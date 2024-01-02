@@ -11,8 +11,22 @@ function out = Dual_Pos(sim, d, T, sysd, type, obj)
 
 % extract data and size
 X = sim.X_noise(:,1:T);     % state data
-U = sim.U(:,1:T-1);         % input data
+
+if isfield(sim, 'U_noise')
+    U = sim.U_noise(:, 1:T-1);
+else
+    U = sim.U(:,1:T-1);         % input data
+end
 eps = sim.epsilon;          % noise bound epsilon
+
+if length(sim.epsilon)==2
+    epsu = sim.epsilon(2);
+else
+    
+    epsu = 0;   
+end
+eps = eps(1);
+
 tol = sim.tolerance;        % delta in paper
 n = size(X,1);              % dim of state
 m = size(U,1);              % dim of input
@@ -63,10 +77,16 @@ end
 
 % constraints
 g = eps*ones(2*n*T,1);            % eq.(16) inequality constraint
+if epsu
+    gu = epsu*ones(2*m*(T-1),1);            % eq.(16) inequality constraint
+else
+    gu = [];
+end
+
 for i = 1:T-1                     % eq.(16) equality constraint
     h(1+n*(i-1):n*i,:) = X(:,i+1) - A*X(:,i) - B*U(:,i);
 end
-cons_data = struct('ineq', g, 'eq', h);  
+cons_data = struct('ineq', g, 'inequ', gu, 'eq', h);  
 
 
 
@@ -79,7 +99,7 @@ P = [p1(:);p2(:)];    % P contains M-A-BK >= 0, M+A+BK >= 0, 1-delta-sum(M,2) >=
 Gram = cell(n^2+n,1);
 Coef = cell(n^2+n,1);
 for i = 1:n^2+n
-    [p_psatz, cons_psatz, Gram{i,1}, Coef{i,1}] = Dual_SS_psatz(P(i), cons_data, d, vars, A);
+    [p_psatz, cons_psatz, Gram{i,1}, Coef{i,1}] = Dual_SS_psatz(P(i), cons_data, d, vars, A, B);
     Cons = [Cons; cons_psatz];      % constraints from psatz
 end
 out.poly = p_psatz;

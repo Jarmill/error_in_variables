@@ -3,15 +3,21 @@
 
 clear
 yalmip('clear')
-rng(1, 'twister')
+rng(3, 'twister')
 tic
 %% parameter
 umax = 1;                   % input bound
 % eps = 0.1;                 % noise bound    dx
 % T = 6;                      % # of samples
-eps = 0.1;                 % noise bound    dx
+% epsx = 0.08;                 % noise bound    dx
+% epsu = 0.04;                %noise bound on du
+
+epsx = 0.04;
+epsu = 0.02;
+
+eps = [epsx, epsu];
 % eps = 0.08;
-T = 12;                      % # of samples
+T = 14;                      % # of samples
 % T = 10;
 % % T = 8;
 d = 1;                      % degree of psatz
@@ -42,17 +48,19 @@ sysd = generate_sys(n,m,A,B);
 U = (2*rand(m, T-1)-1)*umax;
 X = zeros(n,T);
 X(:, 1) = rand(n,1);
-noise_x = (2*rand(size(X))-1)*eps;
+noise_x = (2*rand(size(X))-1)*epsx;
+noise_u = (2*rand(size(U))-1)*epsu;
 for t = 1:(T-1)
     X(:,t+1) = A*X(:,t) + B*U(:,t);
 end
 X_noise = X + noise_x;
-sim = struct('U',U,'X_noise',X_noise,'epsilon',eps,'tolerance',tol);
+U_noise = U + noise_u;
+sim = struct('U',U,'U_noise', U_noise, 'X_noise',X_noise,'epsilon',eps,'tolerance',tol);
 
 %% solve SS
 type = 'no_prior';
-% obj = '[]';
-obj = 'p2p';
+obj = '[]';
+% obj = 'p2p';
 
 out = Dual_Pos(sim, d, T, sysd, type, obj);
 % out = Dual_SS_manual(sim, d, T, obj);   % does not support prior
