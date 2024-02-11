@@ -9,8 +9,8 @@ tic
 umax = 1;                   % input bound
 % eps = [0.01; 0.02; 0];   % noise bound    dx,du,w
 % eps = [0.01; 0.0; 0];   % noise bound    dx,du,w
-eps = [0.1; 0.1; 0];   % noise bound    dx,du,w
-T = 10;                      % # of samples
+eps = [0.04; 0.04; 0];   % noise bound    dx,du,w
+T = 12;                      % # of samples
 % T = 6;
 d = 1;                      % degree of psatz
 tol = 1e-6;                 % delta in paper
@@ -59,26 +59,60 @@ lam_use = 0.9;
 
     P = optimizer(out.cons, out.obj, opts, lam, {out.v, out.Y, out.beta});
 
-
+disp('Compiled model\n')
 %% iterate over the free parameter
 Nlam = 100;
-lam_list = linspace(0, 1, Nlam+1);
-lam_list = lam_list(1:end-1);
+% Nlam = 12;
+% Nlam = 5;
+lam_list = linspace(1, 0, Nlam+1);
+lam_list = lam_list(2:end);
 
 
 v_list = cell(Nlam, 1);
 K_list = cell(Nlam, 1);
 p2p_list = zeros(Nlam,1);
+abs_eig_list = zeros(Nlam, n);
+err_list = zeros(Nlam, 1);
 
 for i = 1:Nlam
-    solc = P(lam_list(i));
+    [solc, err_list(i)] = P(lam_list(i));
     v_list{i} = value(solc{1});
     Y = value(solc{2});
     K_list{i} = Y * diag(1./v_list{i});
     beta = solc{3};
     p2p_list(i) = value(beta)/(1-lam_list(i));
+    Acl = A + B*K_list{i};
+    abs_eig_list(i, :) = abs(eig(Acl));
+    disp(i)
 end
-    % 
+
+save('p2p_ess_result.mat', 'eps', 'T', 'sim', 'v_list', 'K_list', 'p2p_list', 'abs_eig_list', 'd', 'err_list')
+    
+
+
+%% test on superstability alone
+
+out_ss = Dual_SS_all_noise(sim, d, T, type, obj)
+% out = Dual_SS_manual(sim, d, T, obj);   % does not support prior
+sol_ss = optimize(out_ss.cons, out_ss.obj, opts)
+
+%% extract solution
+K_ss = value(out_ss.K);
+lambda_ss = value(out_ss.obj)
+
+[mm, ii] = min(p2p_list);
+%% plot the figure
+figure(2)
+clf
+hold on
+scatter(lam_list(err_list==0), p2p_list(err_list==0), 'filled')
+scatter(lam_list(ii), mm, 200, 'k')
+ylim([4, max(p2p_list(err_list==0))])
+set(gca, 'Yscale', 'log')
+xlabel('$\lambda$', 'interpreter', 'latex', 'FontSize', 14)
+ylabel('$\ell_\infty$ upper-bound', 'interpreter', 'latex', 'FontSize', 14)
+title('Worst-Case Peak-to-Peak Regulation', 'Interpreter', 'latex', 'FontSize', 16)
+legend({'d=1 bounds', sprintf('best bound %0.4f', mm)}, 'location', 'southeast')
     % solc = P(lam_use);
     % obj_rec = value(out.obj);
     % v = value(solc{1});
