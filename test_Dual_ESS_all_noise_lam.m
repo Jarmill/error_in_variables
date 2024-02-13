@@ -12,7 +12,7 @@ umax = 1;                   % input bound
 eps = [0.04; 0.04; 0];   % noise bound    dx,du,w
 T = 12;                      % # of samples
 % T = 6;
-d = 1;                      % degree of psatz
+d = 2;                      % degree of psatz
 tol = 1e-6;                 % delta in paper
 opts = sdpsettings('solver','mosek','verbose', 1);
 
@@ -86,7 +86,7 @@ for i = 1:Nlam
     disp(i)
 end
 
-save('p2p_ess_result.mat', 'eps', 'T', 'sim', 'v_list', 'K_list', 'p2p_list', 'abs_eig_list', 'd', 'err_list')
+save('p2p_ess_result_d2.mat', 'eps', 'T', 'sim', 'v_list', 'K_list', 'p2p_list', 'abs_eig_list', 'd', 'err_list')
     
 
 
